@@ -70,5 +70,114 @@ all datasets are produced using ***CARLA***<sup>[3]</sup> simulator and autopilo
 
 
 
-# Bibtex
+## IV. Network Architecture
+
+*(asterisk) indicates that BatchNorm and ELU layer follow immediately after the marked layer.
+
+@ indicates that layer receives skip-connection input
+
+***N*** indicates # of depth layers.
+
+
+
+### 1. Encoder
+
+| layer   | kernel | stride | channel | pad  | scale_in | scale_out |
+| ------- | ------ | ------ | ------- | ---- | -------- | --------- |
+| Conv1*  | 7      | 1      | 3/32    | 3    | 1        | 1         |
+| Conv1b* | 7      | 2      | 32/32   | 3    | 1        | 2         |
+| Conv2*  | 5      | 1      | 32/64   | 2    | 2        | 2         |
+| Conv2b* | 5      | 2      | 64/64   | 2    | 2        | 4         |
+| Conv3*  | 3      | 1      | 64/128  | 1    | 4        | 4         |
+| Conv3b* | 3      | 2      | 128/128 | 1    | 4        | 8         |
+| Conv4*  | 3      | 1      | 128/256 | 1    | 8        | 8         |
+| Conv4b* | 3      | 2      | 256/256 | 1    | 8        | 16        |
+| Conv5*  | 3      | 1      | 256/512 | 1    | 16       | 16        |
+| Conv5b* | 3      | 2      | 512/512 | 1    | 16       | 32        |
+| Conv6*  | 3      | 1      | 512/512 | 1    | 32       | 32        |
+| Conv6b* | 3      | 2      | 512/512 | 1    | 32       | 64        |
+| Conv7*  | 3      | 1      | 512/512 | 1    | 64       | 64        |
+| Conv7b* | 3      | 2      | 512/512 | 1    | 64       | 128       |
+
+
+
+### 2. Decoder
+
+| layer    | kernel | stride | channel     | pad  | scale_in | scale_out |
+| -------- | ------ | ------ | ----------- | ---- | -------- | --------- |
+| Upconv7* | 3      | 1      | 512/512     | 1    | 128      | 64        |
+| Iconv7*  | 3      | 1      | 1024/512    | 1    | 64       | 64        |
+| Upconv6* | 3      | 1      | 512/512     | 1    | 64       | 32        |
+| Iconv6*  | 3      | 1      | 1024/512    | 1    | 32       | 32        |
+| Upconv5* | 3      | 1      | 512/256     | 1    | 32       | 16        |
+| Iconv5*  | 3      | 1      | 512/256     | 1    | 16       | 16        |
+| Upconv4* | 3      | 1      | 256/128     | 1    | 16       | 8         |
+| Iconv4*  | 3      | 1      | 256/128     | 1    | 8        | 8         |
+| Upconv3* | 3      | 1      | 128/64      | 1    | 8        | 4         |
+| Iconv3*  | 3      | 1      | 128/64      | 1    | 4        | 4         |
+| Upconv2* | 3      | 1      | 64/32       | 1    | 4        | 2         |
+| Iconv2*  | 3      | 1      | 64/32       | 1    | 2        | 2         |
+| Upconv1* | 3      | 1      | 32/16       | 1    | 2        | 1         |
+| Iconv1*  | 3      | 1      | 16/16       | 1    | 1        | 1         |
+| weight   | 3      | 1      | 16/2***N*** | 1    | 1        | 1         |
+| Softmax  |        |        |             |      |          |           |
+
+
+
+### 3. Regressor
+
+| layer    | kernel | stride | channel                    | pad  | scale_in | scale_out |
+| -------- | ------ | ------ | -------------------------- | ---- | -------- | --------- |
+| Conv45*  | 3      | 2      | 1024/512                   | 1    | 128      | 128       |
+| Conv5a*  | 3      | 1      | 512/512                    | 1    | 128      | 128       |
+| Conv5b*  | 3      | 1      | 512/512                    | 1    | 128      | 128       |
+| Conv56*  | 1      | 2      | 512/512                    | 1    | 128      | 128       |
+| Conv6a*  | 1      | 1      | 512/512                    | 1    | 128      | 128       |
+| Conv6b*  | 1      | 1      | 512/512                    | 1    | 128      | 128       |
+| avg_pool |        |        |                            |      |          |           |
+| FC       |        |        | 512/[2***N*** x 2 x 3]     |      |          |           |
+| reshape  |        |        | [Batch x 2***N*** x 2 x 3] |      |          |           |
+
+
+
+### 4. Displacement Map Generation
+
+```Conv (16 / [2 x 2])
+ - Conv (16 / [2 x 2N], kernel=3, stride=1, pad=1)
+ - Tanh
+```
+
+
+
+
+
+## V. Performance
+
+#### Ablation studies according to the number of homographies(K)
+
+![Table1](./assets/Table1.png)
+
+---
+
+#### Method Evaluation
+
+![Table2](./assets/Table2.png)
+
+
+
+
+
+## VI. Citation
+
+```
+@ARTICLE{9393563,
+  author={Song, Dae-Young and Um, Gi-Mun and Lee, Hee Kyung and Cho, Donghyeon},
+  journal={IEEE Signal Processing Letters}, 
+  title={End-to-End Image Stitching Network via Multi-Homography Estimation}, 
+  year={2021},
+  volume={28},
+  number={},
+  pages={763-767},
+  doi={10.1109/LSP.2021.3070525}}
+```
 

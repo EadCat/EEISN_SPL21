@@ -28,7 +28,7 @@ In this paper, we propose an end-to-end stitching network, which takes two image
 
 
 
-## II. Network Architecture
+## II. End-to-End Stitching
 
 
 

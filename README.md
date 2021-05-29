@@ -74,7 +74,7 @@ all datasets are produced using ***CARLA***<sup>[3]</sup> simulator and autopilo
 
 *(asterisk) indicates that BatchNorm and ELU layer follow immediately after the marked layer.
 
-@ indicates that layer receives skip-connection input
+@ indicates that layer receives skip-connection input.
 
 ***N*** indicates # of depth layers.
 
@@ -106,17 +106,17 @@ all datasets are produced using ***CARLA***<sup>[3]</sup> simulator and autopilo
 | layer    | kernel | stride | channel     | pad  | scale_in | scale_out |
 | -------- | ------ | ------ | ----------- | ---- | -------- | --------- |
 | Upconv7* | 3      | 1      | 512/512     | 1    | 128      | 64        |
-| Iconv7*  | 3      | 1      | 1024/512    | 1    | 64       | 64        |
+| Iconv7@* | 3      | 1      | 1024/512    | 1    | 64       | 64        |
 | Upconv6* | 3      | 1      | 512/512     | 1    | 64       | 32        |
-| Iconv6*  | 3      | 1      | 1024/512    | 1    | 32       | 32        |
+| Iconv6@* | 3      | 1      | 1024/512    | 1    | 32       | 32        |
 | Upconv5* | 3      | 1      | 512/256     | 1    | 32       | 16        |
-| Iconv5*  | 3      | 1      | 512/256     | 1    | 16       | 16        |
+| Iconv5@* | 3      | 1      | 512/256     | 1    | 16       | 16        |
 | Upconv4* | 3      | 1      | 256/128     | 1    | 16       | 8         |
-| Iconv4*  | 3      | 1      | 256/128     | 1    | 8        | 8         |
+| Iconv4@* | 3      | 1      | 256/128     | 1    | 8        | 8         |
 | Upconv3* | 3      | 1      | 128/64      | 1    | 8        | 4         |
-| Iconv3*  | 3      | 1      | 128/64      | 1    | 4        | 4         |
+| Iconv3@* | 3      | 1      | 128/64      | 1    | 4        | 4         |
 | Upconv2* | 3      | 1      | 64/32       | 1    | 4        | 2         |
-| Iconv2*  | 3      | 1      | 64/32       | 1    | 2        | 2         |
+| Iconv2@* | 3      | 1      | 64/32       | 1    | 2        | 2         |
 | Upconv1* | 3      | 1      | 32/16       | 1    | 2        | 1         |
 | Iconv1*  | 3      | 1      | 16/16       | 1    | 1        | 1         |
 | weight   | 3      | 1      | 16/2***N*** | 1    | 1        | 1         |

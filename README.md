@@ -76,7 +76,7 @@ all datasets are produced using ***CARLA***<sup>[3]</sup> simulator and autopilo
 
 @ indicates that layer receives skip-connection input.
 
-***N*** indicates # of depth layers.
+***N*** indicates # of depth layers. (2***N***=K, where K is the number of all homographies)
 
 
 
